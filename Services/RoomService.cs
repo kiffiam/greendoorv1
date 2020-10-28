@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -69,9 +70,15 @@ namespace GreenDoorV1.Services
             return rooms;
         }
 
-        public async Task<Room> GetRoomById(long id)
+        public async Task<ActionResult<Room>> GetRoomById(long id)
         {
             var room = await Context.Rooms.FirstOrDefaultAsync(r => r.Id.Equals(id));
+
+            if (room != null)
+            {
+                return room;
+            }
+
             return room;
         }
 
