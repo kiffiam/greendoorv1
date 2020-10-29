@@ -23,7 +23,7 @@ namespace GreenDoorV1.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IActionResult> DeleteReservation(long reservationId)
+        public async Task<bool> DeleteReservation(long reservationId)
         {
             var original = await Context.Reservations.SingleAsync(reservation => reservation.Id.Equals(reservationId));
 
@@ -31,7 +31,7 @@ namespace GreenDoorV1.Services
 
             await Context.SaveChangesAsync();
 
-            return 
+            return true;
         }
 
         public Task<IEnumerable<Reservation>> GetAllReservations()

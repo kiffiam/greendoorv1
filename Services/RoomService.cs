@@ -24,39 +24,41 @@ namespace GreenDoorV1.Services
 
         public async Task<long> AddRoom(Room room)
         {
-            /*try
-            {*/
-                Context.Rooms.Add(room);
-                    /*new Room
-                    {
-                        Id = room.Id,
-                        Difficulty = room.Difficulty,
-                        RecordTime = room.RecorsdTime,
-                        MinTime = room.MinTime,
-                        MaxTime = room.MaxTime,
-                        IntervalTime = room.IntervalTime,
-                        Description = room.Description,
-                    });*/
-                await Context.SaveChangesAsync();
-                return room.Id;
-            //}
-            /*catch (Exception e) 
+            var original = await Context.Rooms.SingleOrDefaultAsync(item => item.Id.Equals(room.Id));
+
+            if (original != null)
             {
-                return 
+                Context.Rooms.Remove(original);
             }
-            */
-            //throw new NotImplementedException();
+            
+            room.isDeleted = false;
+
+            await Context.Rooms.AddAsync(room);
+            /*await Context.Rooms.AddAsync(new Room
+            {
+                Id = room.Id,
+                Difficulty = room.Difficulty,
+                RecordTime = room.RecordTime,
+                MinTime = room.MinTime,
+                MaxTime = room.MaxTime,
+                IntervalTime = room.IntervalTime,
+                Description = room.Description
+            });*/
+           
+            await Context.SaveChangesAsync();
+            return room.Id;
         }
 
         public async Task<bool> DeleteRoom(long? roomId)
         {
-            var deletable = Context.Rooms.Find(roomId);            
+
+            var original = await Context.Rooms.SingleAsync(r => r.Id.Equals(roomId));            
             
             //TODO: függöségek felszámolása, reservation amik a szobára vonatkoznak
 
-            if (deletable != null)
+            if (original != null)
             {
-                Context.Rooms.Remove(deletable);
+                original.isDeleted = true;
                 await Context.SaveChangesAsync();
                 return true;
             } else {
@@ -72,14 +74,11 @@ namespace GreenDoorV1.Services
 
         public async Task<ActionResult<Room>> GetRoomById(long id)
         {
-            var room = await Context.Rooms.FirstOrDefaultAsync(r => r.Id.Equals(id));
-
-            if (room != null)
-            {
+            
+                var room = await Context.Rooms.FirstOrDefaultAsync(r => r.Id.Equals(id));
                 return room;
-            }
-
-            return room;
+            
+            
         }
 
         public Task UpdateRoom()

@@ -33,7 +33,7 @@ namespace GreenDoorV1.Controllers
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(long id)
+        public async Task<ActionResult<Room>> GetRoomDetailed(long id)
         {
             var room = await _roomService.GetRoomById(id);
             return room;

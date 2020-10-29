@@ -15,6 +15,7 @@ namespace GreenDoorV1.Services.Interfaces
         Task UpdateRoom();
         //TODO: Deleting -> delete reservations or flag deleted
         Task<bool> DeleteRoom(long? roomId);
+
         
     }
 }

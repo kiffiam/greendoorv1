@@ -11,7 +11,7 @@ namespace GreenDoorV1.Services.Interfaces
     {
         Task<IEnumerable<Reservation>> GetUserReservations(ApplicationUser user);
         Task<IEnumerable<Reservation>> GetAllReservations();
-        Task<IActionResult> AddAvailableReservation();
-        Task<IActionResult> DeleteReservation(long id);
+        Task<ActionResult> AddAvailableReservation();
+        Task<bool> DeleteReservation(long id);
     }
 }
