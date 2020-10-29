@@ -1,4 +1,5 @@
 ﻿using GreenDoorV1.Entities;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace GreenDoorV1.Services.Interfaces
     {
         Task<IEnumerable<Reservation>> GetUserReservations(ApplicationUser user);
         Task<IEnumerable<Reservation>> GetAllReservations();
-        void AddReservation();
-        void DeleteReservation();
+        Task<IActionResult> AddAvailableReservation();
+        Task<IActionResult> DeleteReservation(long id);
     }
 }

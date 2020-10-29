@@ -19,7 +19,7 @@ namespace GreenDoorV1
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<Reservation> Reservation { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
         public DbSet<FeedPost> FeedPosts { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Room> Rooms { get; set; }

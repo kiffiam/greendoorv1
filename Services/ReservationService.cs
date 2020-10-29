@@ -4,19 +4,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenDoorV1.Services
 {
     public class ReservationService : IReservationService
     {
-        public void AddReservation()
+        protected ApplicationDbContext Context { get; }
+
+        public ReservationService(ApplicationDbContext context)
+        {
+            Context = context;
+        }
+
+        public Task<ActionResult> AddAvailableReservation()
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteReservation()
+        public async Task<IActionResult> DeleteReservation(long reservationId)
         {
-            throw new NotImplementedException();
+            var original = await Context.Reservations.SingleAsync(reservation => reservation.Id.Equals(reservationId));
+
+            //original.IsDeleted = true;
+
+            await Context.SaveChangesAsync();
+
+            return 
         }
 
         public Task<IEnumerable<Reservation>> GetAllReservations()

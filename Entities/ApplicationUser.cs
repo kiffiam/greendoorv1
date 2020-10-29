@@ -10,6 +10,6 @@ namespace GreenDoorV1.Entities
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public string EmailAddress { get; set; }
-        public List<Reservation> Reservations { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }
