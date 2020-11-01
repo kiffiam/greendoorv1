@@ -10,11 +10,11 @@ namespace GreenDoorV1.Services.Interfaces
     public interface IRoomService
     {
         Task<IEnumerable<Room>> GetAllRooms();
-        Task<ActionResult<Room>> GetRoomById(long id);
-        Task<long> AddRoom(Room room);
-        Task UpdateRoom();
+        Task<ActionResult<Room>> GetRoomDetailedById(long? id);
+        Task<ActionResult<Room>> AddRoom(Room room);
+        Task<ActionResult<Room>> UpdateRoom(long? id, Room room);
         //TODO: Deleting -> delete reservations or flag deleted
-        Task<bool> DeleteRoom(long? roomId);
+        Task<ActionResult<bool>> DeleteRoom(long? roomId);
 
         
     }

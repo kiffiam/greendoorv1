@@ -1,34 +1,67 @@
 ﻿using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace GreenDoorV1.Services
 {
     public class FeedPostService : IFeedPostService
     {
-     
-        public void DeleteFeedPost()
+        protected ApplicationDbContext Context { get; }
+
+        public FeedPostService(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            Context = context;
         }
 
-        public Task<IEnumerable<FeedPost>> GetAllFeedPost()
+        public async Task<ActionResult<FeedPost>> AddFeedPost(FeedPost feedPost)
         {
-            throw new NotImplementedException();
+            await Context.FeedPosts.AddAsync(feedPost);
+            await Context.SaveChangesAsync();
+            return feedPost;
         }
 
-        public void UpdateFeedPost()
+        public async Task<bool> DeleteFeedPost(long? id)
         {
-            throw new NotImplementedException();
+            var deletable = await Context.FeedPosts.SingleOrDefaultAsync(f => f.Id.Equals(id));
+            if (deletable != null)
+            {
+                Context.FeedPosts.Remove(deletable);
+                await Context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
-        Task<ActionResult> IFeedPostService.AddFeedPost()
+        public async Task<IEnumerable<FeedPost>> GetAllFeedPost()
         {
-            throw new NotImplementedException();
+            var result = await Context.FeedPosts.ToListAsync();
+            return result;
+        }
+
+        public async Task<ActionResult<FeedPost>> UpdateFeedPost(long? id, FeedPost feedPost)
+        {
+            var set = Context.FeedPosts;
+
+            var original = await set.SingleOrDefaultAsync(f => f.Id.Equals(id));
+
+            if (original == null)
+            {
+                return null;
+            }
+
+            set.Remove(original);
+
+            await set.AddAsync(feedPost);
+
+            await Context.SaveChangesAsync();
+
+            return feedPost;
         }
     }
 }

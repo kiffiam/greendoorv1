@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace GreenDoorV1.Services.Interfaces
 {
-    interface IFeedPostService
+    public interface IFeedPostService
     {
         Task<IEnumerable<FeedPost>> GetAllFeedPost();
-        Task<ActionResult> AddFeedPost();
-        void DeleteFeedPost();
-        void UpdateFeedPost();
+        Task<ActionResult<FeedPost>> AddFeedPost(FeedPost feedPost);
+        Task<bool> DeleteFeedPost(long? id);
+        Task<ActionResult<FeedPost>> UpdateFeedPost(long? id, FeedPost feedPost);
 
     }
 }

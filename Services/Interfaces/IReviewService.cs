@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace GreenDoorV1.Services.Interfaces
 {
-    interface IReviewService
+    public interface IReviewService
     {
         Task<IEnumerable<Review>> GetAllReviews();
-        Task<IEnumerable<Review>> GetRoomReviews(long roomId);
-        void AddReview(long roomId);
-        void DeleteReview(long? reviewId);
+        Task<IEnumerable<Review>> GetRoomReviews(long? roomId);
+        Task<Review> AddReview(Review review);
+
+        //Probably not neceserry, because who deletes reviews
+        Task<bool> DeleteReview(long? reviewId);
     }
 }

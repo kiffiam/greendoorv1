@@ -8,6 +8,7 @@ namespace GreenDoorV1.Entities
     public class FeedPost
     {
         public long Id { get; set; }
+        public string Title { get; set; }
         public string PostText { get; set; }
     }
 }

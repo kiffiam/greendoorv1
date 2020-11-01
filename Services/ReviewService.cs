@@ -4,29 +4,55 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenDoorV1.Services
 {
     public class ReviewService : IReviewService
     {
-        public void AddReview(long roomId)
+        protected ApplicationDbContext Context { get; }
+
+        public ReviewService(ApplicationDbContext context)
+        {
+            Context = context;
+        }
+
+        public async Task<Review> AddReview(Review review)
+        {
+            review.Room = await Context.Rooms.FindAsync(review.Id);
+
+            review.ApplicationUser = await Context.Users.SingleOrDefaultAsync(u => u.Id.Equals(review.UserId));
+
+            await Context.Reviews.AddAsync(review);
+
+            await Context.SaveChangesAsync();
+
+            return review;
+        }
+
+        public Task<bool> DeleteReview(long? reviewId)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteReview(long? reviewId)
+        public async Task<IEnumerable<Review>> GetAllReviews()
         {
-            throw new NotImplementedException();
+            var result = await Context.Reviews.ToListAsync();
+
+            return result;
         }
 
-        public Task<IEnumerable<Review>> GetAllReviews()
+        public async Task<IEnumerable<Review>> GetRoomReviews(long? roomId)
         {
-            throw new NotImplementedException();
-        }
+            var roomReviews = await Context.Reviews.Where(r => r.RoomId.Equals(roomId)).ToListAsync();
+            //var roomReviews = await Context.Reviews.Where(r => r.RoomId.Equals(roomId)).Include(x => x.Room).ToListAsync();
 
-        public Task<IEnumerable<Review>> GetRoomReviews(long roomId)
-        {
-            throw new NotImplementedException();
+            if (roomReviews.Count == 0)
+            {
+                return null;
+            }
+
+            return roomReviews;
         }
     }
 }

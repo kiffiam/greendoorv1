@@ -1,6 +1,7 @@
 ﻿using GreenDoorV1.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Sockets;
@@ -15,10 +16,14 @@ namespace GreenDoorV1.Entities
 
         [Required]
         [DateAfterNow]
-        public DateTime ReservationDateTime { get; set; }
+        public DateTime? ReservationDateTime { get; set; }
         public Room Room { get; set; }
         public int? NumberOfPlayers { get; set; }
+
+        [DefaultValue(false)]
         public bool IsBooked { get; set; }
+
+        [DefaultValue(false)]
         public bool isDeleted { get; set; }
 
     }

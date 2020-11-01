@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -22,34 +23,22 @@ namespace GreenDoorV1.Services
             Context = context;
         }
 
-        public async Task<long> AddRoom(Room room)
+        public async Task<ActionResult<Room>> AddRoom(Room room)
         {
-            var original = await Context.Rooms.SingleOrDefaultAsync(item => item.Id.Equals(room.Id));
-
-            if (original != null)
+            //room.isDeleted = false;
+            if (room.AvailableReservations == null)
             {
-                Context.Rooms.Remove(original);
+                room.AvailableReservations = new List<Reservation>();
             }
-            
-            room.isDeleted = false;
 
             await Context.Rooms.AddAsync(room);
-            /*await Context.Rooms.AddAsync(new Room
-            {
-                Id = room.Id,
-                Difficulty = room.Difficulty,
-                RecordTime = room.RecordTime,
-                MinTime = room.MinTime,
-                MaxTime = room.MaxTime,
-                IntervalTime = room.IntervalTime,
-                Description = room.Description
-            });*/
            
             await Context.SaveChangesAsync();
-            return room.Id;
+
+            return room;
         }
 
-        public async Task<bool> DeleteRoom(long? roomId)
+        public async Task<ActionResult<bool>> DeleteRoom(long? roomId)
         {
 
             var original = await Context.Rooms.SingleAsync(r => r.Id.Equals(roomId));            
@@ -72,18 +61,43 @@ namespace GreenDoorV1.Services
             return rooms;
         }
 
-        public async Task<ActionResult<Room>> GetRoomById(long id)
+        public async Task<ActionResult<Room>> GetRoomDetailedById(long? id)
         {
-            
-                var room = await Context.Rooms.FirstOrDefaultAsync(r => r.Id.Equals(id));
-                return room;
-            
-            
+
+            var room = await Context.Rooms.FirstOrDefaultAsync(r => r.Id.Equals(id));
+
+            if (room == null)
+            {
+                return null;
+            }
+
+            return room;
         }
 
-        public Task UpdateRoom()
+        public async Task<ActionResult<Room>> UpdateRoom(long? id ,Room room)
         {
-            throw new NotImplementedException();
+            var set = Context.Rooms;
+
+            //var original = await set.Include(r => r.AvailableReservations).SingleOrDefaultAsync(item => item.Id.Equals(id));
+            var original = await set.SingleOrDefaultAsync(item => item.Id.Equals(id));
+
+            if (original == null)
+            {
+                return null;
+            }
+
+            var reservations = original.AvailableReservations;
+
+            set.Remove(original);
+
+            room.AvailableReservations = reservations;
+
+            await set.AddAsync(room);
+
+            await Context.SaveChangesAsync();
+
+            return room;
+
         }
     }
 }

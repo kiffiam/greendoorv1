@@ -35,51 +35,29 @@ namespace GreenDoorV1.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Room>> GetRoomDetailed(long id)
         {
-            var room = await _roomService.GetRoomById(id);
+            var room = await _roomService.GetRoomDetailedById(id);
             return room;
         }
 
         // PUT: api/Rooms/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        /*[HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutRoom(long id, Room room)
         {
-            if (id != room.Id)
+            var result = await _roomService.UpdateRoom(id, room);
+            if (result == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            _context.Entry(room).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }*/
+            return Ok();
+        }
 
         // POST: api/Rooms
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
             await _roomService.AddRoom(room);
 
-            return Ok();
+            return Ok(room);
         }
 
         // DELETE: api/Rooms/5

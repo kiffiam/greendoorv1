@@ -4,14 +4,16 @@ using GreenDoorV1;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GreenDoorV1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201030195448_feedpostupdate")]
+    partial class feedpostupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,8 +132,7 @@ namespace GreenDoorV1.Migrations
                     b.Property<int?>("NumberOfPlayers")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ReservationDateTime")
-                        .IsRequired()
+                    b.Property<DateTime>("ReservationDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("RoomId")
@@ -166,17 +167,12 @@ namespace GreenDoorV1.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
-                    b.Property<long>("RoomId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("RoomName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("RoomId");
 
                     b.ToTable("Reviews");
                 });
@@ -364,12 +360,6 @@ namespace GreenDoorV1.Migrations
                     b.HasOne("GreenDoorV1.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("GreenDoorV1.Entities.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
