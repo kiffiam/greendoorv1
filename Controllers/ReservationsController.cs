@@ -33,7 +33,7 @@ namespace GreenDoorV1.Controllers
 
         // GET: api/Reservations/5
         [HttpGet("{id}/booked")]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetBookedReservationsByRoomId([FromRoute] long id)
+        public async Task<ActionResult<IEnumerable<ReservationDTO>>> GetAllBookedReservationsByRoomId([FromRoute] long id)
         {
             var result = await _reservationService.GetAllBookedReservationsByRoomId(id);
 
@@ -78,6 +78,13 @@ namespace GreenDoorV1.Controllers
 
             return Ok(result);
 
+        }
+
+        [HttpPut("Book/{reservationId}")]
+        public async Task<ActionResult<bool>> BookReservation(string userId, long reservationId)
+        {
+            var result = await _reservationService.BookReservation(userId, reservationId);
+            return Ok(result);
         }
 
         // DELETE: api/Reservations/5

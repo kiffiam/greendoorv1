@@ -41,7 +41,7 @@ namespace GreenDoorV1.Services
             return result;
         }
 
-        public async Task<ActionResult<bool>> BookReservation(ApplicationUser applicationUser, long reservationId)
+        public async Task<ActionResult<bool>> BookReservation(string userId, long reservationId)
         {
             var set = Context.Reservations;
 
@@ -49,13 +49,15 @@ namespace GreenDoorV1.Services
 
             if (reservation != null && reservation.ApplicationUser == null)
             {
-                reservation.ApplicationUser = applicationUser;
+                var user = await Context.Users.FindAsync(userId);
+                reservation.ApplicationUser = user;
                 reservation.IsBooked = true;
 
-                var user = await Context.Users.FindAsync(applicationUser.Id);
+                if (user.Reservations == null)
+                {
+                    user.Reservations = new List<Reservation>();
+                }
                 user.Reservations.Add(reservation);
-
-                
 
                 set.Update(reservation);
 
@@ -119,7 +121,7 @@ namespace GreenDoorV1.Services
 
         }
 
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetAllBookedReservationsByRoomId(long roomId)
+        public async Task<ActionResult<IEnumerable<ReservationDTO>>> GetAllBookedReservationsByRoomId(long roomId)
         {
             var result = await Context.Reservations
                         .Where(r => r.Room.Id.Equals(roomId) && r.IsBooked.Equals(true))

@@ -15,14 +15,14 @@ namespace GreenDoorV1.Services.Interfaces
 
         //user--
         Task<ActionResult<IEnumerable<Reservation>>> GetUserReservations(ApplicationUser user);
-        Task<ActionResult<bool>> BookReservation(ApplicationUser applicationUser, long reservationId);
-        Task<ActionResult<bool>> UnbookReservation(ApplicationUser applicationUser, long reservationId);
+        Task<ActionResult<bool>> BookReservation(string userId, long reservationId);
+        Task<ActionResult<bool>> UnbookReservation(ApplicationUser userId, long reservationId);
         
 
         //admin----
 
         Task<ActionResult<IEnumerable<ReservationDTO>>> GetAllBookedReservations();
-        Task<ActionResult<IEnumerable<Reservation>>> GetAllBookedReservationsByRoomId(long roomId);
+        Task<ActionResult<IEnumerable<ReservationDTO>>> GetAllBookedReservationsByRoomId(long roomId);
         Task<ActionResult<Reservation>> AddAvailableRangeReservation(long roomId, int qty, DateTime fromDateTime);
         Task<ActionResult<Reservation>> AddReservation(Reservation reservation);
         //so the admin can modify the bookings
