@@ -60,7 +60,7 @@ namespace GreenDoorV1.Controllers
 
         // PUT: api/Reservations/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Reservation>> PutReservation(long id, Reservation reservation)
+        public async Task<ActionResult<Reservation>> PutReservation([FromRoute] long id, [FromBody]Reservation reservation)
         {
             return await _reservationService.UpdateReservation(id, reservation);
         }

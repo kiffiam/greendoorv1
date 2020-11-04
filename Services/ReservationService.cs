@@ -29,8 +29,8 @@ namespace GreenDoorV1.Services
 
         public async Task<ActionResult<IEnumerable<Reservation>>> GetAllFreeReservationsByRoomId(long roomId)
         {
-            var result = await Context.Reservations.Where(x => x.Room.Id.Equals(roomId) && x.IsBooked.Equals(false) && (x.ReservationDateTime > DateTime.Now))
-                        .Include(y => y.ApplicationUser.LastName)
+            var result = await Context.Reservations.Where(x => x.Room.Id.Equals(roomId) && !x.IsBooked && (x.ReservationDateTime > DateTime.Now))
+                        .Include(y => y.ApplicationUser)
                             .ToListAsync();
 
             if (result.Count == 0)
@@ -96,7 +96,7 @@ namespace GreenDoorV1.Services
         public async Task<ActionResult<IEnumerable<ReservationDTO>>> GetAllBookedReservations()
         {
             var result = await Context.Reservations
-                            .Where(r => r.IsBooked.Equals(true))
+                            .Where(r => r.IsBooked)
                                 .Include(x => x.Room)                 
                                 .Include(y => y.ApplicationUser)
                                     .Select(z => new ReservationDTO()
@@ -124,7 +124,7 @@ namespace GreenDoorV1.Services
         public async Task<ActionResult<IEnumerable<ReservationDTO>>> GetAllBookedReservationsByRoomId(long roomId)
         {
             var result = await Context.Reservations
-                        .Where(r => r.Room.Id.Equals(roomId) && r.IsBooked.Equals(true))
+                        .Where(r => r.Room.Id.Equals(roomId) && r.IsBooked)
                             .Include(x => x.Room)
                             .Include(y => y.ApplicationUser)
                             .Select(z => new ReservationDTO()
@@ -163,7 +163,7 @@ namespace GreenDoorV1.Services
                 newReservations.Add(new Reservation
                 {
                     ReservationDateTime = fromDateTime + i * room.IntervalTime,
-                    //Room = room,
+                    Room = room,
                     ApplicationUser = null,
                     IsBooked = false,
                     IsDeleted = false,
@@ -178,13 +178,33 @@ namespace GreenDoorV1.Services
             return newReservations[0];
         }
 
-        public Task<ActionResult<Reservation>> UpdateReservation(long id, Reservation reservation)
+        public async Task<ActionResult<Reservation>> UpdateReservation(long id, Reservation reservation)
         {
-            throw new NotImplementedException();
+            var set = Context.Reservations;
+
+            var original = await set.SingleOrDefaultAsync(item => item.Id.Equals(id));
+
+            if (original == null)
+            {
+                return null;
+            }
+
+            set.Remove(original);
+
+            //object cycle -- but it is updated nevertheless
+            reservation.Room = await Context.Rooms.FindAsync(reservation.Room.Id);
+            reservation.ApplicationUser = await Context.Users.FindAsync(reservation.ApplicationUser.Id);
+            
+            await set.AddAsync(reservation);
+
+            await Context.SaveChangesAsync();
+
+            return reservation;
         }
 
         public async Task<ActionResult<bool>> DeleteReservation(long id)
         {
+            //Törölni kell a hozzá tarzotó szoba IcollectionReservation-ből a reservationt, meg az applicationUser reservataionből is
             throw new NotImplementedException();
         }
 
