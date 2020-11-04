@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GreenDoorV1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201029124256_Reservation_Model_mod3")]
-    partial class Reservation_Model_mod3
+    [Migration("20201103190828_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -108,6 +108,9 @@ namespace GreenDoorV1.Migrations
                     b.Property<string>("PostText")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("FeedPosts");
@@ -126,17 +129,18 @@ namespace GreenDoorV1.Migrations
                     b.Property<bool>("IsBooked")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("NumberOfPlayers")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReservationDateTime")
+                    b.Property<DateTime?>("ReservationDateTime")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("RoomId")
                         .HasColumnType("bigint");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -164,7 +168,10 @@ namespace GreenDoorV1.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
-                    b.Property<long?>("RoomId")
+                    b.Property<long>("RoomId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -192,6 +199,9 @@ namespace GreenDoorV1.Migrations
                     b.Property<TimeSpan>("IntervalTime")
                         .HasColumnType("time");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<TimeSpan>("MaxTime")
                         .HasColumnType("time");
 
@@ -203,9 +213,6 @@ namespace GreenDoorV1.Migrations
 
                     b.Property<TimeSpan>("RecordTime")
                         .HasColumnType("time");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -350,7 +357,7 @@ namespace GreenDoorV1.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("GreenDoorV1.Entities.Room", "Room")
-                        .WithMany()
+                        .WithMany("AvailableReservations")
                         .HasForeignKey("RoomId");
                 });
 
@@ -362,7 +369,9 @@ namespace GreenDoorV1.Migrations
 
                     b.HasOne("GreenDoorV1.Entities.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

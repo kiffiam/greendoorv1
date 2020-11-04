@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GreenDoorV1.DTOs
 {
-    public class ReviewDTO
+    public class ReViewModel
     {
 
     }

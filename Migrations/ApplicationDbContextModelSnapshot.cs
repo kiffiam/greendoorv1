@@ -127,6 +127,9 @@ namespace GreenDoorV1.Migrations
                     b.Property<bool>("IsBooked")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("NumberOfPlayers")
                         .HasColumnType("int");
 
@@ -136,9 +139,6 @@ namespace GreenDoorV1.Migrations
 
                     b.Property<long?>("RoomId")
                         .HasColumnType("bigint");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -197,6 +197,9 @@ namespace GreenDoorV1.Migrations
                     b.Property<TimeSpan>("IntervalTime")
                         .HasColumnType("time");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<TimeSpan>("MaxTime")
                         .HasColumnType("time");
 
@@ -208,9 +211,6 @@ namespace GreenDoorV1.Migrations
 
                     b.Property<TimeSpan>("RecordTime")
                         .HasColumnType("time");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

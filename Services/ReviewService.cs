@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenDoorV1.Services
@@ -17,9 +18,9 @@ namespace GreenDoorV1.Services
             Context = context;
         }
 
-        public async Task<Review> AddReview(Review review)
+        public async Task<ActionResult<Review>> AddReview(Review review)
         {
-            review.Room = await Context.Rooms.FindAsync(review.Id);
+            review.Room = await Context.Rooms.FindAsync(review.RoomId);
 
             review.ApplicationUser = await Context.Users.SingleOrDefaultAsync(u => u.Id.Equals(review.UserId));
 

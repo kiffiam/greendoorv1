@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GreenDoorV1.Migrations
 {
-    public partial class initdb : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,6 +56,7 @@ namespace GreenDoorV1.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(nullable: true),
                     PostText = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -70,11 +71,13 @@ namespace GreenDoorV1.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Difficulty = table.Column<int>(nullable: false),
                     MinTime = table.Column<TimeSpan>(nullable: false),
                     MaxTime = table.Column<TimeSpan>(nullable: false),
                     RecordTime = table.Column<TimeSpan>(nullable: false),
                     IntervalTime = table.Column<TimeSpan>(nullable: false),
-                    Description = table.Column<string>(nullable: true)
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -188,27 +191,29 @@ namespace GreenDoorV1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservation",
+                name: "Reservations",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApplicationUserId = table.Column<string>(nullable: true),
-                    ReservationDate = table.Column<DateTime>(nullable: false),
+                    ReservationDateTime = table.Column<DateTime>(nullable: false),
                     RoomId = table.Column<long>(nullable: true),
-                    NumberOfPlayers = table.Column<int>(nullable: false)
+                    NumberOfPlayers = table.Column<int>(nullable: true),
+                    IsBooked = table.Column<bool>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservation", x => x.Id);
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservation_AspNetUsers_ApplicationUserId",
+                        name: "FK_Reservations_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reservation_Rooms_RoomId",
+                        name: "FK_Reservations_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -222,7 +227,8 @@ namespace GreenDoorV1.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApplicationUserId = table.Column<string>(nullable: true),
-                    RoomId = table.Column<long>(nullable: true),
+                    UserId = table.Column<long>(nullable: false),
+                    RoomId = table.Column<long>(nullable: false),
                     Point = table.Column<int>(nullable: false),
                     ReviewText = table.Column<string>(maxLength: 1000, nullable: true)
                 },
@@ -240,7 +246,7 @@ namespace GreenDoorV1.Migrations
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -283,13 +289,13 @@ namespace GreenDoorV1.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservation_ApplicationUserId",
-                table: "Reservation",
+                name: "IX_Reservations_ApplicationUserId",
+                table: "Reservations",
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservation_RoomId",
-                table: "Reservation",
+                name: "IX_Reservations_RoomId",
+                table: "Reservations",
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
@@ -324,7 +330,7 @@ namespace GreenDoorV1.Migrations
                 name: "FeedPosts");
 
             migrationBuilder.DropTable(
-                name: "Reservation");
+                name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "Reviews");

@@ -47,7 +47,7 @@ namespace GreenDoorV1.Services
 
             if (original != null)
             {
-                original.isDeleted = true;
+                original.IsDeleted = true;
                 await Context.SaveChangesAsync();
                 return true;
             } else {

@@ -9,7 +9,9 @@ namespace GreenDoorV1.Services.Interfaces
 {
     public interface IFeedPostService
     {
+        //unlogged/user---
         Task<IEnumerable<FeedPost>> GetAllFeedPost();
+        //admin---
         Task<ActionResult<FeedPost>> AddFeedPost(FeedPost feedPost);
         Task<bool> DeleteFeedPost(long? id);
         Task<ActionResult<FeedPost>> UpdateFeedPost(long? id, FeedPost feedPost);

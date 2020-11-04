@@ -16,6 +16,7 @@ namespace GreenDoorV1
         {
             base.OnModelCreating(modelBuilder);
 
+            //modelBuilder.Entity<Reservation>().HasKey(x => new { x.Room.Id, x.ReservationDateTime });
         }
 
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }

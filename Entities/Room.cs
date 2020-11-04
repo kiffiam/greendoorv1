@@ -22,7 +22,7 @@ namespace GreenDoorV1.Entities
         public TimeSpan IntervalTime { get; set; }
 
         [DefaultValue(false)]
-        public bool isDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         public virtual ICollection<Reservation> AvailableReservations { get; set; }
         //public List<Picture> Pictures { get; set; }
     }
