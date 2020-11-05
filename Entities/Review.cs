@@ -11,9 +11,11 @@ namespace GreenDoorV1.Entities
     {
         public long Id { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+
         [ForeignKey("Id")]
         public long UserId { get; set; }
         public Room Room { get; set; }
+
         [ForeignKey("Id")]
         public long RoomId { get; set; }
         //public string RoomName { get; set; }

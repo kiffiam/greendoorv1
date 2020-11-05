@@ -9,7 +9,6 @@ namespace GreenDoorV1.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public string EmailAddress { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
     }
 }

@@ -29,8 +29,12 @@ namespace GreenDoorV1.Services
 
         public async Task<ActionResult<IEnumerable<Reservation>>> GetAllFreeReservationsByRoomId(long roomId)
         {
-            var result = await Context.Reservations.Where(x => x.Room.Id.Equals(roomId) && !x.IsBooked && (x.ReservationDateTime > DateTime.Now))
+            //var result = await Context.Rooms.Include(x=>x.AvailableReservations).SingleOrDefaultAsync(r => r.Id.Equals(roomId));
+            //var reservations = result.AvailableReservations.ToList();
+            var result = await Context.Reservations
+                .Where(x => x.Room.Id.Equals(roomId) && !x.IsBooked && (x.ReservationDateTime > DateTime.Now))
                         .Include(y => y.ApplicationUser)
+                        .Include(r => r.Room)
                             .ToListAsync();
 
             if (result.Count == 0)
@@ -66,7 +70,7 @@ namespace GreenDoorV1.Services
                 return true;
             }
 
-             return false;
+            return false;
         }
 
         public async Task<ActionResult<bool>> UnbookReservation(ApplicationUser applicationUser, long reservationId)
@@ -89,7 +93,7 @@ namespace GreenDoorV1.Services
             set.Update(reservation);
 
             await Context.SaveChangesAsync();
-            
+
             return true;
         }
 
@@ -97,10 +101,10 @@ namespace GreenDoorV1.Services
         {
             var result = await Context.Reservations
                             .Where(r => r.IsBooked)
-                                .Include(x => x.Room)                 
+                                .Include(x => x.Room)
                                 .Include(y => y.ApplicationUser)
                                     .Select(z => new ReservationDTO()
-                                    { 
+                                    {
                                         Id = z.Id,
                                         ReservationDateTime = z.ReservationDateTime,
                                         NumberOfPlayers = z.NumberOfPlayers,
@@ -158,6 +162,11 @@ namespace GreenDoorV1.Services
 
             var newReservations = new List<Reservation>();
 
+            if (room.AvailableReservations == null)
+            {
+                room.AvailableReservations = new List<Reservation>();
+            }
+
             for (int i = 0; i < qty; i++)
             {
                 newReservations.Add(new Reservation
@@ -170,7 +179,9 @@ namespace GreenDoorV1.Services
                 });
                 //room.AvailableReservations.Add(newReservations[i]);
             }
+
             //Context.Rooms.Update(room);
+
             await ReservationSet.AddRangeAsync(newReservations);
 
             await Context.SaveChangesAsync();
@@ -194,7 +205,7 @@ namespace GreenDoorV1.Services
             //object cycle -- but it is updated nevertheless
             reservation.Room = await Context.Rooms.FindAsync(reservation.Room.Id);
             reservation.ApplicationUser = await Context.Users.FindAsync(reservation.ApplicationUser.Id);
-            
+
             await set.AddAsync(reservation);
 
             await Context.SaveChangesAsync();
@@ -211,7 +222,7 @@ namespace GreenDoorV1.Services
         public async Task<ActionResult<Reservation>> AddReservation(Reservation reservation)
         {
             var result = await Context.Reservations.SingleOrDefaultAsync(x => x.ReservationDateTime.Equals(reservation.ReservationDateTime));
-            
+
             if (result != null)
             {
                 return null;

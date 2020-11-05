@@ -12,12 +12,12 @@ namespace GreenDoorV1.Entities
     public class Reservation
     {
         public long Id { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
         [Required]
         [DateAfterNow]
         public DateTime? ReservationDateTime { get; set; }
-        public Room Room { get; set; }
+        public virtual Room Room { get; set; }
         public int? NumberOfPlayers { get; set; }
 
         [DefaultValue(false)]
