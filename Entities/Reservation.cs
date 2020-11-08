@@ -12,7 +12,7 @@ namespace GreenDoorV1.Entities
     public class Reservation
     {
         public long Id { get; set; }
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         [Required]
         [DateAfterNow]

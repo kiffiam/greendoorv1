@@ -9,6 +9,8 @@ using GreenDoorV1;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services;
 using GreenDoorV1.Services.Interfaces;
+using AutoMapper;
+using GreenDoorV1.ViewModels;
 
 namespace GreenDoorV1.Controllers
 {
@@ -17,26 +19,37 @@ namespace GreenDoorV1.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly IRoomService _roomService;
+        private readonly IMapper _mapper;
 
-        public RoomsController(IRoomService roomService)
+        public RoomsController(IRoomService roomService, IMapper mapper)
         {
             _roomService = roomService;
+            _mapper = mapper;
         }
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        public async Task<ActionResult<IEnumerable<RoomListView>>> GetRooms()
         {
             var result = await _roomService.GetAllRooms();
-            return Ok(result);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            var _result = _mapper.Map<IEnumerable<RoomListView>>(result);
+
+            return Ok(_result);
         }
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoomDetailed(long id)
+        public async Task<ActionResult> GetRoomDetailed([FromRoute] long id)
         {
             var room = await _roomService.GetRoomDetailedById(id);
-            return room;
+            var result = _mapper.Map<RoomDetailedView>(room);
+            return Ok(result);
         }
 
         // PUT: api/Rooms/5
@@ -55,9 +68,9 @@ namespace GreenDoorV1.Controllers
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
-            await _roomService.AddRoom(room);
+           var result = await _roomService.AddRoom(room);
 
-            return Ok(room);
+            return Ok(result);
         }
 
         // DELETE: api/Rooms/5

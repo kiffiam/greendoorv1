@@ -1,4 +1,4 @@
-﻿using GreenDoorV1.DTOs;
+﻿using GreenDoorV1.ViewModels;
 using GreenDoorV1.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,22 +10,21 @@ namespace GreenDoorV1.Services.Interfaces
 {
     public interface IReservationService
     {
-        //unlogged--
-        Task<ActionResult<IEnumerable<Reservation>>> GetAllFreeReservationsByRoomId(long roomId);
+        //unlogged--?? kell ez egyáltalán? DetailedRoomView-ba ugyis ott lesz
+        Task<ActionResult<IEnumerable<ReservationListView>>> GetAllFreeReservationsByRoomId(long roomId);
 
         //user--
-        Task<ActionResult<IEnumerable<Reservation>>> GetUserReservations(ApplicationUser user);
-        Task<ActionResult<bool>> BookReservation(string userId, long reservationId);
-        Task<ActionResult<bool>> UnbookReservation(ApplicationUser userId, long reservationId);
-        
+        Task<IEnumerable<Reservation>> GetUserReservations(string userId);
+        Task<bool> BookReservation(string userId, long reservationId);
+        Task<bool> UnbookReservation(string userId, long reservationId);
+
 
         //admin----
 
-        Task<ActionResult<IEnumerable<ReservationDTO>>> GetAllBookedReservations();
-        Task<ActionResult<IEnumerable<ReservationDTO>>> GetAllBookedReservationsByRoomId(long roomId);
-        Task<ActionResult<Reservation>> AddAvailableRangeReservation(long roomId, int qty, DateTime fromDateTime);
+        Task<ActionResult<IEnumerable<ReservationListView>>> GetAllBookedReservations();
+        Task<ActionResult<IEnumerable<ReservationListView>>> GetAllBookedReservationsByRoomId(long roomId);
+        Task<ActionResult<IEnumerable<Reservation>>> AddAvailableRangeReservation(long roomId, int qty, DateTime fromDateTime);
         Task<ActionResult<Reservation>> AddReservation(Reservation reservation);
-        //so the admin can modify the bookings
         Task<ActionResult<Reservation>> UpdateReservation(long id, Reservation reservation);
         Task<ActionResult<bool>> DeleteReservation(long id);
     }

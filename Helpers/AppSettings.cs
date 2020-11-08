@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GreenDoorV1.DTOs
+namespace GreenDoorV1.Helpers
 {
-    public class RoomListView
+    public class AppSettings
     {
+        public string Secret { get; set; }
     }
 }

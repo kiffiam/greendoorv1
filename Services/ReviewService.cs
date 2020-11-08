@@ -20,9 +20,9 @@ namespace GreenDoorV1.Services
 
         public async Task<ActionResult<Review>> AddReview(Review review)
         {
-            review.Room = await Context.Rooms.FindAsync(review.RoomId);
+            //review.Room = await Context.Rooms.FindAsync(rev);
 
-            review.ApplicationUser = await Context.Users.SingleOrDefaultAsync(u => u.Id.Equals(review.UserId));
+            //review.User = await Context.Users.SingleOrDefaultAsync(u => u.Id.Equals(review.UserId));
 
             await Context.Reviews.AddAsync(review);
 
@@ -38,15 +38,21 @@ namespace GreenDoorV1.Services
 
         public async Task<IEnumerable<Review>> GetAllReviews()
         {
-            var result = await Context.Reviews.ToListAsync();
+            var result = await Context.Reviews
+                    .Include(r => r.Room)
+                    .Include(r => r.User)
+                        .ToListAsync();
 
             return result;
         }
 
         public async Task<IEnumerable<Review>> GetRoomReviews(long? roomId)
         {
-            var roomReviews = await Context.Reviews.Where(r => r.RoomId.Equals(roomId)).ToListAsync();
-            //var roomReviews = await Context.Reviews.Where(r => r.RoomId.Equals(roomId)).Include(x => x.Room).ToListAsync();
+            var roomReviews = await Context.Reviews
+                .Include(r => r.Room)
+                .Include(r => r.User)
+                    .Where(r => r.Room.Id.Equals(roomId))
+                        .ToListAsync();
 
             if (roomReviews.Count == 0)
             {

@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace GreenDoorV1
 {
-    public static class ServiceRegister
+    public static class ServiceHandler
     {
         public static IServiceCollection GreenDoorV1(this IServiceCollection services)
         {
-            services.AddTransient<IRoomService, RoomService>();
-            services.AddTransient<IReservationService, ReservationService>();
-            services.AddTransient<IFeedPostService, FeedPostService>();
-            services.AddTransient<IReviewService, ReviewService>();
-
+            services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IFeedPostService, FeedPostService>();
+            services.AddScoped<IReviewService, ReviewService>();
+            
             return services;
         }
     }

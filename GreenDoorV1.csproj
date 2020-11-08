@@ -6,10 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201107201350_fieldnamechange.cs" />
+    <Compile Remove="Migrations\20201107201350_fieldnamechange.Designer.cs" />
+    <Compile Remove="Migrations\20201107201421_fieldnamechange.cs" />
+    <Compile Remove="Migrations\20201107201421_fieldnamechange.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Entities\Room.cs~RFc131e0c.TMP" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />

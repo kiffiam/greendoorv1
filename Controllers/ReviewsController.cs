@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using GreenDoorV1.ViewModels;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -15,23 +17,26 @@ namespace GreenDoorV1.Controllers
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewService _reviewService;
+        private readonly IMapper _mapper;
 
-        public ReviewsController(IReviewService reviewService)
+        public ReviewsController(IReviewService reviewService, IMapper mapper)
         {
             _reviewService = reviewService;
+            _mapper = mapper;
         }
 
         // GET: api/<ReviewsController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Review>>> GetAllReviews()
+        public async Task<IActionResult> GetAllReviews()
         {
             var result = await _reviewService.GetAllReviews();
-            return Ok(result);
+
+            return Ok(_mapper.Map<List<ReviewViewModel>>(result));
         }
 
         // GET api/<ReviewsController>/5
         [HttpGet("RoomReviews/{id}")]
-        public async Task<ActionResult<IEnumerable<Review>>> GetRoomRevies([FromRoute]long? id)
+        public async Task<IActionResult> GetRoomReviews([FromRoute]long? id)
         {
             var result = await _reviewService.GetRoomReviews(id);
 
@@ -40,7 +45,7 @@ namespace GreenDoorV1.Controllers
                 return NotFound();
             }
 
-            return Ok(result);
+            return Ok(_mapper.Map<List<ReviewViewModel>>(result));
         }
 
         // POST api/<ReviewsController>

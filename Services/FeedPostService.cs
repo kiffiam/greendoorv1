@@ -21,6 +21,7 @@ namespace GreenDoorV1.Services
 
         public async Task<ActionResult<FeedPost>> AddFeedPost(FeedPost feedPost)
         {
+            feedPost.PostingDate = DateTime.Now;
             await Context.FeedPosts.AddAsync(feedPost);
             await Context.SaveChangesAsync();
             return feedPost;

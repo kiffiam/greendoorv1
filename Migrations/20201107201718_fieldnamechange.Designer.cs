@@ -4,14 +4,16 @@ using GreenDoorV1;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GreenDoorV1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201107201718_fieldnamechange")]
+    partial class fieldnamechange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,14 +103,9 @@ namespace GreenDoorV1.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("PostText")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PostingDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -122,6 +119,9 @@ namespace GreenDoorV1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsBooked")
                         .HasColumnType("bit");
@@ -139,14 +139,11 @@ namespace GreenDoorV1.Migrations
                     b.Property<long?>("RoomId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Reservations");
                 });
@@ -349,13 +346,13 @@ namespace GreenDoorV1.Migrations
 
             modelBuilder.Entity("GreenDoorV1.Entities.Reservation", b =>
                 {
+                    b.HasOne("GreenDoorV1.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("Reservations")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("GreenDoorV1.Entities.Room", "Room")
                         .WithMany("AvailableReservations")
                         .HasForeignKey("RoomId");
-
-                    b.HasOne("GreenDoorV1.Entities.ApplicationUser", "User")
-                        .WithMany("Reservations")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("GreenDoorV1.Entities.Review", b =>

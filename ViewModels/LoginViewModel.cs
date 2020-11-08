@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GreenDoorV1.DTOs
+namespace GreenDoorV1.ViewModels
 {
-    public class RoomDetailedView
+    public class LoginViewModel
     {
     }
 }

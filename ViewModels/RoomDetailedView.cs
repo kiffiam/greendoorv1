@@ -1,16 +1,17 @@
-﻿using GreenDoorV1.Helpers;
+﻿using GreenDoorV1.Entities;
+using GreenDoorV1.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
+using static GreenDoorV1.Helpers.TimespanConverter;
 
-namespace GreenDoorV1.Entities
+namespace GreenDoorV1.ViewModels
 {
-    public class Room
+    public class RoomDetailedView
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -31,14 +32,8 @@ namespace GreenDoorV1.Entities
         [JsonConverter(typeof(TimespanConverter))]
         [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
         public TimeSpan RecordTime { get; set; }
-
-        [JsonConverter(typeof(TimespanConverter))]
-        [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
-        public TimeSpan IntervalTime { get; set; }
-
-        [DefaultValue(false)]
-        public bool IsDeleted { get; set; }
-        public virtual ICollection<Reservation> AvailableReservations { get; set; }
+        
+        public virtual ICollection<ReservationListView> AvailableReservations { get; set; }
         //public List<Picture> Pictures { get; set; }
     }
 }
