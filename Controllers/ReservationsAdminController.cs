@@ -9,6 +9,7 @@ using GreenDoorV1;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using GreenDoorV1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GreenDoorV1.Controllers
 {
@@ -24,6 +25,7 @@ namespace GreenDoorV1.Controllers
         }
 
         //ADMIN
+        
         [HttpGet("AllBooked")]
         public async Task<ActionResult<IEnumerable<ReservationListView>>> GetAllBookedReservations()
         {

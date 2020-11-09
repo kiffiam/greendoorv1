@@ -1,11 +1,14 @@
 ﻿using GreenDoorV1.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Xml;
 
 namespace GreenDoorV1
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        //private readonly RoleManager<IdentityRole> _roleManager;
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -24,6 +27,12 @@ namespace GreenDoorV1
         public DbSet<FeedPost> FeedPosts { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Room> Rooms { get; set; }
+
+        public async void SeedData(RoleManager<IdentityRole> roleManager)
+        {
+            await roleManager.CreateAsync(new IdentityRole(Entities.Roles.Admin));
+            await roleManager.CreateAsync(new IdentityRole(Entities.Roles.User));
+        }
 
     }
 }

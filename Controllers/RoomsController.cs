@@ -11,6 +11,7 @@ using GreenDoorV1.Services;
 using GreenDoorV1.Services.Interfaces;
 using AutoMapper;
 using GreenDoorV1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GreenDoorV1.Controllers
 {
@@ -44,6 +45,7 @@ namespace GreenDoorV1.Controllers
         }
 
         // GET: api/Rooms/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetRoomDetailed([FromRoute] long id)
         {
@@ -53,6 +55,7 @@ namespace GreenDoorV1.Controllers
         }
 
         // PUT: api/Rooms/5
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRoom(long id, Room room)
         {
@@ -65,6 +68,7 @@ namespace GreenDoorV1.Controllers
         }
 
         // POST: api/Rooms
+        [Authorize(Roles="Admin")]
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
