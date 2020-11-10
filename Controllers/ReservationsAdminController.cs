@@ -10,11 +10,14 @@ using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using GreenDoorV1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace GreenDoorV1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReservationsAdminController : ControllerBase
     {
         private readonly IReservationService _reservationService;

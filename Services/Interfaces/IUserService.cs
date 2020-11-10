@@ -1,4 +1,5 @@
-﻿using GreenDoorV1.ViewModels;
+﻿using GreenDoorV1.Entities;
+using GreenDoorV1.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,9 @@ namespace GreenDoorV1.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<object> Register(RegisterViewModel registerViewModel);
-        Task Login(LoginViewModel loginViewModel);
+        Task<object> Register(ApplicationUser user, string password);
+        Task<object> RegisterAdmin(ApplicationUser user, string password);
+        Task<object> Login(string email, string password);
         Task Logout();
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace GreenDoorV1
@@ -19,7 +20,18 @@ namespace GreenDoorV1
         {
             base.OnModelCreating(modelBuilder);
 
+            var user = new IdentityRole(ApplicationRoles.User)
+            {
+                NormalizedName = ApplicationRoles.User.ToUpper()
+            };
+            var admin = new IdentityRole(ApplicationRoles.Admin)
+            {
+                NormalizedName = ApplicationRoles.Admin.ToUpper()
+            };
+
             //modelBuilder.Entity<Reservation>().HasKey(x => new { x.Room.Id, x.ReservationDateTime });
+
+            modelBuilder.Entity<IdentityRole>().HasData(admin, user);
         }
 
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -27,12 +39,6 @@ namespace GreenDoorV1
         public DbSet<FeedPost> FeedPosts { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Room> Rooms { get; set; }
-
-        public async void SeedData(RoleManager<IdentityRole> roleManager)
-        {
-            await roleManager.CreateAsync(new IdentityRole(Entities.Roles.Admin));
-            await roleManager.CreateAsync(new IdentityRole(Entities.Roles.User));
-        }
 
     }
 }

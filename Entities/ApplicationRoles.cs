@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GreenDoorV1.Entities
 {
-    public static class Roles
+    public static class ApplicationRoles
     {
         public const string Admin = "Admin";
         public const string User = "User";

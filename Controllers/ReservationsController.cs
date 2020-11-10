@@ -10,6 +10,7 @@ using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using AutoMapper;
 using GreenDoorV1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GreenDoorV1.Controllers
 {
@@ -28,6 +29,7 @@ namespace GreenDoorV1.Controllers
 
         //TODO: GetUserBookings.
         [HttpGet("profile/bookings")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult> GetUserReservations(string userId)
         {
             var result = await _reservationService.GetUserReservations(userId);
@@ -39,6 +41,7 @@ namespace GreenDoorV1.Controllers
         }
 
         [HttpPut("Book/{reservationId}")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult> BookReservation(string userId, long reservationId)
         {
             var result = await _reservationService.BookReservation(userId, reservationId);
@@ -50,6 +53,7 @@ namespace GreenDoorV1.Controllers
         }
 
         [HttpPut("Unbook/{reservationId}")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult> UnbookReservation(string userId, long reservationId)
         {
             var result = await _reservationService.UnbookReservation(userId, reservationId);

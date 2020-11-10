@@ -12,11 +12,13 @@ using GreenDoorV1.Services.Interfaces;
 using AutoMapper;
 using GreenDoorV1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace GreenDoorV1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RoomsController : ControllerBase
     {
         private readonly IRoomService _roomService;
@@ -57,6 +59,7 @@ namespace GreenDoorV1.Controllers
         // PUT: api/Rooms/5
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutRoom(long id, Room room)
         {
             var result = await _roomService.UpdateRoom(id, room);
@@ -68,8 +71,9 @@ namespace GreenDoorV1.Controllers
         }
 
         // POST: api/Rooms
-        [Authorize(Roles="Admin")]
+        
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
            var result = await _roomService.AddRoom(room);
@@ -79,6 +83,7 @@ namespace GreenDoorV1.Controllers
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteRoom(long id)
         {
             var result = _roomService.DeleteRoom(id);

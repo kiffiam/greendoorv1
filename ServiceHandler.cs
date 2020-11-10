@@ -1,5 +1,6 @@
 ﻿using GreenDoorV1.Services;
 using GreenDoorV1.Services.Interfaces;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,13 @@ namespace GreenDoorV1
             services.AddScoped<IFeedPostService, FeedPostService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IUserService, UserService>();
-            
+
             return services;
+        }
+
+        public static void RegisterSwagger()
+        {
+
         }
     }
 }

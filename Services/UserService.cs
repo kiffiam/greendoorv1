@@ -4,6 +4,7 @@ using GreenDoorV1.Services.Interfaces;
 using GreenDoorV1.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -16,10 +17,8 @@ using System.Threading.Tasks;
 
 namespace GreenDoorV1.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
-
-
         //private readonly RoleManager<ApplicationUser> _roleManager;
 
         private readonly UserManager<ApplicationUser> _userManager;
@@ -40,10 +39,10 @@ namespace GreenDoorV1.Services
             //_roleManager = roleManager;
             Context = db;
         }
-        
-        public async Task<object> Register(RegisterViewModel registerViewModel)
+
+        public async Task<object> Register(ApplicationUser user, string password)
         {
-            var user = new ApplicationUser
+            /*var user = new ApplicationUser
             {
                 UserName = registerViewModel.UserName,
                 Email = registerViewModel.Email,
@@ -51,16 +50,17 @@ namespace GreenDoorV1.Services
                 LastName = registerViewModel.LastName,
                 BirthDate = registerViewModel.BirthDate,
                 PhoneNumber = registerViewModel.PhoneNumber
-            };
-            var userWithSameEmail = await _userManager.FindByEmailAsync(registerViewModel.Email);
+            };*/
+
+            var userWithSameEmail = await _userManager.FindByEmailAsync(user.Email);
             if (userWithSameEmail == null)
             {
-                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
+                var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
-                    await _userManager.AddToRoleAsync(user, Roles.User.ToString());
-                    return await GenerateJwtToken(registerViewModel.Email, user);
+                    await _userManager.AddToRoleAsync(user, ApplicationRoles.User);
+                    return await GenerateJwtToken(user.Email, user, ApplicationRoles.User);
                 }
                 return $"User Registered with username {user.UserName}";
             }
@@ -69,26 +69,61 @@ namespace GreenDoorV1.Services
                 return $"Email {user.Email } is already registered.";
             }
         }
-    
 
-        public Task Login(LoginViewModel loginViewModel)
+        public async Task<object> RegisterAdmin(ApplicationUser user, string password)
         {
-            throw new NotImplementedException();
+            var userWithSameEmail = await _userManager.FindByEmailAsync(user.Email);
+            if (userWithSameEmail == null)
+            {
+                var result = await _userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, false);
+                    await _userManager.AddToRoleAsync(user, ApplicationRoles.Admin);
+                    return await GenerateJwtToken(user.Email, user, ApplicationRoles.Admin);
+                }
+                return $"User Registered with username {user.UserName}";
+            }
+            else
+            {
+                return $"Email {user.Email } is already registered.";
+            }
         }
 
-        public Task Logout()
-        {
-            throw new NotImplementedException();
+        public async Task<object> Login(string email, string password)
+
+        {   var user = await Context.Users.SingleOrDefaultAsync(x => x.Email.Equals(email));
+            if (user == null)
+            {
+                return null;
+            }
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, false);
+
+            if (!result.Succeeded)
+            {
+                return null;
+            }
+
+            
+            var roles = await _userManager.GetRolesAsync(user);
+            return GenerateJwtToken(email, user, roles.FirstOrDefault());
         }
 
-        private async Task<object> GenerateJwtToken(string email, ApplicationUser user)
+        public async Task Logout()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
+        private async Task<object> GenerateJwtToken(string email, ApplicationUser user, string role)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-
+                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new Claim("id", user.Id),
+                new Claim("role", role),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));

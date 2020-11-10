@@ -7,6 +7,7 @@ using GreenDoorV1.ViewModels;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,6 +28,7 @@ namespace GreenDoorV1.Controllers
 
         // GET: api/<ReviewsController>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllReviews()
         {
             var result = await _reviewService.GetAllReviews();
@@ -36,6 +38,7 @@ namespace GreenDoorV1.Controllers
 
         // GET api/<ReviewsController>/5
         [HttpGet("RoomReviews/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetRoomReviews([FromRoute]long? id)
         {
             var result = await _reviewService.GetRoomReviews(id);
@@ -50,6 +53,7 @@ namespace GreenDoorV1.Controllers
 
         // POST api/<ReviewsController>
         [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Post([FromBody] Review review)
         {
             var result = await _reviewService.AddReview(review);
