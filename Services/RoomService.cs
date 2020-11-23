@@ -56,7 +56,7 @@ namespace GreenDoorV1.Services
         //All rooms for list view
         public async Task<IEnumerable<Room>> GetAllRooms()
         {
-            var rooms = await Context.Rooms.ToListAsync();
+            var rooms = await Context.Rooms.Where(r => !r.IsDeleted).ToListAsync();
 
             if (rooms == null)
             {
@@ -72,7 +72,7 @@ namespace GreenDoorV1.Services
             var room = await Context.Rooms.Include(r => r.AvailableReservations).SingleOrDefaultAsync(r => r.Id.Equals(id));
 
             //lehet nem csak a szabadakat hanem az összeset kellene
-            room.AvailableReservations = room.AvailableReservations.Where(r => !r.IsBooked && !r.IsDeleted).ToList();
+            room.AvailableReservations = room.AvailableReservations.Where(r=> !r.IsDeleted && r.ReservationDateTime > DateTime.Now).ToList();
 
             if (room == null)
             {

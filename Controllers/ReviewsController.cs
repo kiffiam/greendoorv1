@@ -53,11 +53,11 @@ namespace GreenDoorV1.Controllers
 
         // POST api/<ReviewsController>
         [HttpPost]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> Post([FromBody] Review review)
+        //[Authorize(Roles = "User")]
+        public async Task<IActionResult> PostReview([FromBody] Review review)
         {
             var result = await _reviewService.AddReview(review);
-            return Ok(result);
+            return Ok(_mapper.Map<ReviewViewModel>(result));
         }
 
         // PUT api/<ReviewsController>/5
@@ -68,10 +68,11 @@ namespace GreenDoorV1.Controllers
         }*/
 
         // DELETE api/<ReviewsController>/5
-        /*[HttpDelete("{id}")]
-        public void Delete(long? id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReview(long? id)
         {
-
-        }*/
+            var result = await _reviewService.DeleteReview(id);
+            return Ok(result);
+        }
     }
 }

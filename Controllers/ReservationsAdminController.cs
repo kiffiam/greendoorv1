@@ -11,34 +11,44 @@ using GreenDoorV1.Services.Interfaces;
 using GreenDoorV1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AutoMapper;
 
 namespace GreenDoorV1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(Roles = "Admin")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReservationsAdminController : ControllerBase
     {
         private readonly IReservationService _reservationService;
+        private readonly IMapper _mapper;
 
-        public ReservationsAdminController(IReservationService reservationService)
+        public ReservationsAdminController(IReservationService reservationService, IMapper mapper)
         {
             _reservationService = reservationService;
+            _mapper = mapper;
         }
 
         //ADMIN
-        
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ReservationListView>>> GetAllReservations()
+        {
+            var result = await _reservationService.GetAllReservations();
+            return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result));
+        }
+
         [HttpGet("AllBooked")]
         public async Task<ActionResult<IEnumerable<ReservationListView>>> GetAllBookedReservations()
         {
             var result = await _reservationService.GetAllBookedReservations();
-            return Ok(result);
+            return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result));
         }
 
         // GET: api/Reservations/5
         [HttpGet("{id}/booked")]
-        public async Task<ActionResult<IEnumerable<ReservationListView>>> GetAllBookedReservationsByRoomId([FromRoute] long id)
+        public async Task<ActionResult> GetAllBookedReservationsByRoomId([FromRoute] long id)
         {
             var result = await _reservationService.GetAllBookedReservationsByRoomId(id);
 
@@ -47,7 +57,7 @@ namespace GreenDoorV1.Controllers
                 return NotFound();
             }
 
-            return Ok(result);
+            return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result));
         }
 
         [HttpGet("{id}/free")]
@@ -60,7 +70,7 @@ namespace GreenDoorV1.Controllers
                 return NotFound();
             }
 
-            return Ok(result);
+            return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result));
         }
 
         // PUT: api/Reservations/5
@@ -72,7 +82,7 @@ namespace GreenDoorV1.Controllers
 
         // POST: api/Reservations
         [HttpPost("{roomId}")]
-        public async Task<ActionResult<Reservation>> AddAvailableReservations([FromRoute] long roomId, int qty, DateTime fromDateTime)
+        public async Task<ActionResult<IEnumerable<ReservationListView>>> AddAvailableReservations([FromRoute] long roomId, int qty, DateTime fromDateTime)
         {
             var result = await _reservationService.AddAvailableRangeReservation(roomId, qty, fromDateTime);
 
@@ -81,7 +91,7 @@ namespace GreenDoorV1.Controllers
                 return BadRequest();
             }
 
-            return Ok(result);
+            return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result));
 
         }
 

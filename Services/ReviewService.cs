@@ -31,9 +31,17 @@ namespace GreenDoorV1.Services
             return review;
         }
 
-        public Task<bool> DeleteReview(long? reviewId)
+        public async Task<bool> DeleteReview(long? reviewId)
         {
-            throw new NotImplementedException();
+            var deletable = await Context.Reviews.FindAsync(reviewId);
+            if (deletable == null)
+            {
+                return false;
+            }
+            Context.Reviews.Remove(deletable);
+            await Context.SaveChangesAsync();
+            return true;
+
         }
 
         public async Task<IEnumerable<Review>> GetAllReviews()

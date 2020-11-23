@@ -11,7 +11,7 @@ namespace GreenDoorV1.Services.Interfaces
     public interface IReservationService
     {
         //unlogged--?? kell ez egyáltalán? DetailedRoomView-ba ugyis ott lesz
-        Task<ActionResult<IEnumerable<ReservationListView>>> GetAllFreeReservationsByRoomId(long roomId);
+        Task<IEnumerable<Reservation>> GetAllFreeReservationsByRoomId(long roomId);
 
         //user--
         Task<IEnumerable<Reservation>> GetUserReservations(string userId);
@@ -20,12 +20,12 @@ namespace GreenDoorV1.Services.Interfaces
 
 
         //admin----
-
-        Task<ActionResult<IEnumerable<ReservationListView>>> GetAllBookedReservations();
-        Task<ActionResult<IEnumerable<ReservationListView>>> GetAllBookedReservationsByRoomId(long roomId);
-        Task<ActionResult<IEnumerable<Reservation>>> AddAvailableRangeReservation(long roomId, int qty, DateTime fromDateTime);
-        Task<ActionResult<Reservation>> AddReservation(Reservation reservation);
-        Task<ActionResult<Reservation>> UpdateReservation(long id, Reservation reservation);
-        Task<ActionResult<bool>> DeleteReservation(long id);
+        Task<IEnumerable<Reservation>> GetAllReservations();
+        Task<IEnumerable<Reservation>> GetAllBookedReservations();
+        Task<IEnumerable<Reservation>> GetAllBookedReservationsByRoomId(long roomId);
+        Task<IEnumerable<Reservation>> AddAvailableRangeReservation(long roomId, int qty, DateTime fromDateTime);
+        Task<Reservation> AddReservation(Reservation reservation);
+        Task<Reservation> UpdateReservation(long id, Reservation reservation);
+        Task<bool> DeleteReservation(long id);
     }
 }

@@ -29,7 +29,8 @@ namespace GreenDoorV1.Controllers
 
         //TODO: GetUserBookings.
         [HttpGet("profile/bookings")]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
+        [AllowAnonymous]
         public async Task<ActionResult> GetUserReservations(string userId)
         {
             var result = await _reservationService.GetUserReservations(userId);
@@ -40,11 +41,12 @@ namespace GreenDoorV1.Controllers
             return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result)); ;
         }
 
-        [HttpPut("Book/{reservationId}")]
-        [Authorize(Roles = "User")]
-        public async Task<ActionResult> BookReservation(string userId, long reservationId)
+        [HttpPut("Book/{id}")]
+        //[Authorize(Roles = "User")]
+        //[AllowAnonymous]
+        public async Task<ActionResult> BookReservation([FromBody] string userId, [FromRoute] long id)
         {
-            var result = await _reservationService.BookReservation(userId, reservationId);
+            var result = await _reservationService.BookReservation(userId, id);
             if (!result)
             {
                 return BadRequest();
@@ -53,7 +55,7 @@ namespace GreenDoorV1.Controllers
         }
 
         [HttpPut("Unbook/{reservationId}")]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public async Task<ActionResult> UnbookReservation(string userId, long reservationId)
         {
             var result = await _reservationService.UnbookReservation(userId, reservationId);

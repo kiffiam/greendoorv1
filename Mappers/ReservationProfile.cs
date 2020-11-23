@@ -12,7 +12,11 @@ namespace GreenDoorV1.Mappers
     {
         public ReservationProfile()
         {
-            CreateMap<Reservation, ReservationListView>();
+            CreateMap<Reservation, ReservationListView>()
+                .ForMember(r => r.RoomName, m => m.MapFrom(a => a.Room.Name))
+                .ForMember(r => r.UserName, m => m.MapFrom(u => u.User.UserName))
+                .ForMember(r => r.UserPhoneNumber, m=>m.MapFrom(up=>up.User.PhoneNumber));
+
             CreateMap<ReservationListView, Reservation>();
         }
     }

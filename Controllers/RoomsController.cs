@@ -60,7 +60,7 @@ namespace GreenDoorV1.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutRoom(long id, Room room)
+        public async Task<IActionResult> PutRoom(long id, [FromBody] Room room)
         {
             var result = await _roomService.UpdateRoom(id, room);
             if (result == null)
@@ -73,17 +73,17 @@ namespace GreenDoorV1.Controllers
         // POST: api/Rooms
         
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        //[Authorize(Roles = "Admin")]
+        public async Task<ActionResult> PostRoom([FromBody] Room room)
         {
-           var result = await _roomService.AddRoom(room);
-
-            return Ok(result);
+            var result = await _roomService.AddRoom(room);
+            
+            return Ok(_mapper.Map<RoomDetailedView>(room));
         }
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult DeleteRoom(long id)
         {
             var result = _roomService.DeleteRoom(id);

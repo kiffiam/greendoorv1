@@ -91,8 +91,8 @@ namespace GreenDoorV1.Controllers
         [Route("Logout")]
         public async Task<ActionResult> Logout()
         {
-            var result = await _userService.Logout();
-            return Ok(result);
+            await _userService.Logout();
+            return Ok();
         }
 
         private async Task<object> GenerateJwtToken(string email, ApplicationUser user)
