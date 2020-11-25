@@ -22,6 +22,7 @@ namespace GreenDoorV1.Services.Interfaces
         //admin----
         Task<IEnumerable<Reservation>> GetAllReservations();
         Task<IEnumerable<Reservation>> GetAllBookedReservations();
+        Task<IEnumerable<Reservation>> GetAllReservationsByRoomId(long roomId);
         Task<IEnumerable<Reservation>> GetAllBookedReservationsByRoomId(long roomId);
         Task<IEnumerable<Reservation>> AddAvailableRangeReservation(long roomId, int qty, DateTime fromDateTime);
         Task<Reservation> AddReservation(Reservation reservation);

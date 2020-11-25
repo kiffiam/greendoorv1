@@ -25,6 +25,10 @@ namespace GreenDoorV1.Services
         public async Task<IEnumerable<Reservation>> GetUserReservations(string userId)
         {
             var user = await Context.Users.Include(u=>u.Reservations).SingleOrDefaultAsync(x=>x.Id.Equals(userId));
+            if (user == null) 
+            {
+                return null;
+            }
             var result = user.Reservations.ToList();
             return result;
         }
@@ -265,6 +269,15 @@ namespace GreenDoorV1.Services
         {
             var result = await Context.Reservations
                         .Where(r => !r.IsDeleted)
+                            .Include(x => x.Room)
+                            .Include(y => y.User).ToListAsync();
+            return result;
+        }
+
+        public async Task<IEnumerable<Reservation>> GetAllReservationsByRoomId(long roomId)
+        {
+            var result = await Context.Reservations
+                        .Where(r => !r.IsDeleted && r.Room.Id.Equals(roomId))
                             .Include(x => x.Room)
                             .Include(y => y.User).ToListAsync();
             return result;

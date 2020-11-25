@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace GreenDoorV1.Services
 {
-    public class UserService : IUserService
+    public class AuthService : IAuthService
     {
         //private readonly RoleManager<ApplicationUser> _roleManager;
 
@@ -27,16 +27,14 @@ namespace GreenDoorV1.Services
         private readonly IConfiguration _configuration;
         ApplicationDbContext Context;
 
-        public UserService(UserManager<ApplicationUser> userManager,
+        public AuthService(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,
-            //RoleManager<ApplicationUser> roleManager,
             ApplicationDbContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
-            //_roleManager = roleManager;
             Context = db;
         }
 
@@ -58,11 +56,12 @@ namespace GreenDoorV1.Services
                 var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, false);
                     await _userManager.AddToRoleAsync(user, ApplicationRoles.User);
-                    return await GenerateJwtToken(user.Email, user, ApplicationRoles.User);
+                    await _signInManager.SignInAsync(user, false);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    return await GenerateJwtToken(user.Email, user, roles.FirstOrDefault());
                 }
-                return $"User Registered with username {user.UserName}";
+                return $"User Registered with email {user.Email}";
             }
             else
             {
@@ -80,6 +79,7 @@ namespace GreenDoorV1.Services
                 {
                     await _signInManager.SignInAsync(user, false);
                     await _userManager.AddToRoleAsync(user, ApplicationRoles.Admin);
+                    var roles = await _userManager.GetRolesAsync(user);
                     return await GenerateJwtToken(user.Email, user, ApplicationRoles.Admin);
                 }
                 return $"User Registered with username {user.UserName}";
@@ -104,10 +104,13 @@ namespace GreenDoorV1.Services
                 return null;
             }
 
-            
             var roles = await _userManager.GetRolesAsync(user);
+
             return GenerateJwtToken(email, user, roles.FirstOrDefault());
+            
         }
+
+
 
         public async Task Logout()
         {
@@ -121,6 +124,8 @@ namespace GreenDoorV1.Services
                 new Claim(JwtRegisteredClaimNames.Email, email),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new Claim("phonenumber", user.PhoneNumber),
+                new Claim("username", user.UserName),
                 new Claim("id", user.Id),
                 new Claim("role", role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GreenDoorV1.Services.Interfaces
 {
-    public interface IUserService
+    public interface IAuthService
     {
         Task<object> Register(ApplicationUser user, string password);
         Task<object> RegisterAdmin(ApplicationUser user, string password);

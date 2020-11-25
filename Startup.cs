@@ -47,6 +47,8 @@ namespace GreenDoorV1
             //
             services.AddCors();
 
+            services.AddHttpContextAccessor();
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddControllers().AddNewtonsoftJson();

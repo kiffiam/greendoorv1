@@ -15,6 +15,7 @@ namespace GreenDoorV1.Mappers
             CreateMap<ApplicationUser, LoginViewModel>();
             CreateMap<LoginViewModel, ApplicationUser>();
             CreateMap<RegisterViewModel, ApplicationUser>();
+            CreateMap<ApplicationUser, RegisterViewModel>();
         }
     }
 }

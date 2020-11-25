@@ -59,15 +59,15 @@ namespace GreenDoorV1.Controllers
         // PUT: api/Rooms/5
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutRoom(long id, [FromBody] Room room)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PutRoom([FromRoute] long id, [FromBody] Room room)
         {
             var result = await _roomService.UpdateRoom(id, room);
             if (result == null)
             {
                 return NotFound();
             }
-            return Ok();
+            return Ok(result);
         }
 
         // POST: api/Rooms

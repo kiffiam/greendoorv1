@@ -17,7 +17,7 @@ namespace GreenDoorV1
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<IFeedPostService, FeedPostService>();
             services.AddScoped<IReviewService, ReviewService>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }

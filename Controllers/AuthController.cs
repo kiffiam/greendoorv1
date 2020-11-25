@@ -24,13 +24,13 @@ namespace GreenDoorV1.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAuthService _userService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
         public AuthController(
             IConfiguration configuration,
-            IUserService userService,
+            IAuthService userService,
             IMapper mapper
             )
         {
@@ -47,10 +47,10 @@ namespace GreenDoorV1.Controllers
             var user = _mapper.Map<ApplicationUser>(registerViewModel);
 
             var result = await _userService.Register(user, registerViewModel.Password);
-            /*if (result == null)
+            if (result == null)
             {
                 return BadRequest();
-            }*/
+            }
             return Ok(result);
         }
 
@@ -77,13 +77,13 @@ namespace GreenDoorV1.Controllers
             {
                 return BadRequest();
             }
-            var result = await _userService.Login(loginViewModel.Email, loginViewModel.Password);
-            if (result == null)
+            var token = await _userService.Login(loginViewModel.Email, loginViewModel.Password);
+            if (token == null)
             {
                 return Unauthorized();
             }
 
-            return Ok(result);
+            return Ok(token);
             
         }
 

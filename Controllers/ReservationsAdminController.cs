@@ -12,13 +12,15 @@ using GreenDoorV1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
+using Newtonsoft.Json.Linq;
+using GreenDoorV1.Helpers;
 
 namespace GreenDoorV1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReservationsAdminController : ControllerBase
     {
         private readonly IReservationService _reservationService;
@@ -43,6 +45,19 @@ namespace GreenDoorV1.Controllers
         public async Task<ActionResult<IEnumerable<ReservationListView>>> GetAllBookedReservations()
         {
             var result = await _reservationService.GetAllBookedReservations();
+            return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetAllReservationsByRoomId([FromRoute]long id)
+        {
+            var result = await _reservationService.GetAllReservationsByRoomId(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
             return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result));
         }
 
@@ -82,9 +97,9 @@ namespace GreenDoorV1.Controllers
 
         // POST: api/Reservations
         [HttpPost("{roomId}")]
-        public async Task<ActionResult<IEnumerable<ReservationListView>>> AddAvailableReservations([FromRoute] long roomId, int qty, DateTime fromDateTime)
+        public async Task<ActionResult<IEnumerable<ReservationListView>>> AddAvailableReservations([FromRoute] long roomId, [FromBody]QtyAndTime qtyAndTime)
         {
-            var result = await _reservationService.AddAvailableRangeReservation(roomId, qty, fromDateTime);
+            var result = await _reservationService.AddAvailableRangeReservation(roomId, qtyAndTime.Quantity, qtyAndTime.FromDateTime);
 
             if (result == null)
             {
