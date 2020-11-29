@@ -11,7 +11,6 @@ namespace GreenDoorV1.ViewModels
         public long Id { get; set; }
         public string UserName { get; set; }
         public string RoomName { get; set; }
-        [Range(0,5)]
         public int Point { get; set; }
         public string ReviewText { get; set; }
     }

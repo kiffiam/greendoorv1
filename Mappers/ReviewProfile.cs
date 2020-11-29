@@ -12,9 +12,12 @@ namespace GreenDoorV1.Mappers
     {
         public ReviewProfile()
         {
-            CreateMap<ReviewViewModel,Review>();
-            CreateMap<Review, ReviewViewModel>().ForMember(r => r.RoomName, m => m.MapFrom(a => a.Room.Name))
+            CreateMap<Review, ReviewViewModel>()
+                .ForMember(r => r.RoomName, m => m.MapFrom(a => a.Room.Name))
                 .ForMember(r => r.UserName, m => m.MapFrom(u => u.User.UserName));
+
+            CreateMap<ReviewViewModel,Review>();
+            
         }
     }
 }

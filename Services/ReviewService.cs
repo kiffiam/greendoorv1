@@ -18,11 +18,12 @@ namespace GreenDoorV1.Services
             Context = context;
         }
 
-        public async Task<ActionResult<Review>> AddReview(Review review)
-        {
-            //review.Room = await Context.Rooms.FindAsync(rev);
+        public async Task<Review> AddReview(Review review, string userId, long roomId) { 
 
-            //review.User = await Context.Users.SingleOrDefaultAsync(u => u.Id.Equals(review.UserId));
+
+            review.Room = await Context.Rooms.FindAsync(roomId);
+
+            review.User = await Context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userId));
 
             await Context.Reviews.AddAsync(review);
 

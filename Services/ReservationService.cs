@@ -24,7 +24,10 @@ namespace GreenDoorV1.Services
 
         public async Task<IEnumerable<Reservation>> GetUserReservations(string userId)
         {
-            var user = await Context.Users.Include(u=>u.Reservations).SingleOrDefaultAsync(x=>x.Id.Equals(userId));
+            var user = await Context.Users
+                        .Include(u=>u.Reservations)
+                            .ThenInclude(r=>r.Room)
+                        .SingleOrDefaultAsync(x=>x.Id.Equals(userId));
             if (user == null) 
             {
                 return null;

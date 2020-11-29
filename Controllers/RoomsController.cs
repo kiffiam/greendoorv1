@@ -18,7 +18,7 @@ namespace GreenDoorV1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RoomsController : ControllerBase
     {
         private readonly IRoomService _roomService;
@@ -32,6 +32,7 @@ namespace GreenDoorV1.Controllers
 
         // GET: api/Rooms
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<RoomListView>>> GetRooms()
         {
             var result = await _roomService.GetAllRooms();
@@ -59,7 +60,7 @@ namespace GreenDoorV1.Controllers
         // PUT: api/Rooms/5
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutRoom([FromRoute] long id, [FromBody] Room room)
         {
             var result = await _roomService.UpdateRoom(id, room);
@@ -73,7 +74,7 @@ namespace GreenDoorV1.Controllers
         // POST: api/Rooms
         
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> PostRoom([FromBody] Room room)
         {
             var result = await _roomService.AddRoom(room);
@@ -83,7 +84,7 @@ namespace GreenDoorV1.Controllers
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteRoom(long id)
         {
             var result = _roomService.DeleteRoom(id);

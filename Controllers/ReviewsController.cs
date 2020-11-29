@@ -8,6 +8,7 @@ using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,11 +20,13 @@ namespace GreenDoorV1.Controllers
     {
         private readonly IReviewService _reviewService;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReviewsController(IReviewService reviewService, IMapper mapper)
+        public ReviewsController(IReviewService reviewService, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _reviewService = reviewService;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         // GET: api/<ReviewsController>
@@ -37,9 +40,9 @@ namespace GreenDoorV1.Controllers
         }
 
         // GET api/<ReviewsController>/5
-        [HttpGet("RoomReviews/{id}")]
+        [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetRoomReviews([FromRoute]long? id)
+        public async Task<IActionResult> GetRoomReviews([FromRoute] long? id)
         {
             var result = await _reviewService.GetRoomReviews(id);
 
@@ -52,11 +55,12 @@ namespace GreenDoorV1.Controllers
         }
 
         // POST api/<ReviewsController>
-        [HttpPost]
-        //[Authorize(Roles = "User")]
-        public async Task<IActionResult> PostReview([FromBody] Review review)
+        [HttpPost("{roomId}")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> PostReview([FromBody] Review review, [FromRoute] long roomId)
         {
-            var result = await _reviewService.AddReview(review);
+            var userId = User.FindFirst("id")?.Value;
+            var result = await _reviewService.AddReview(review, userId, roomId);
             return Ok(_mapper.Map<ReviewViewModel>(result));
         }
 
@@ -69,6 +73,7 @@ namespace GreenDoorV1.Controllers
 
         // DELETE api/<ReviewsController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteReview(long? id)
         {
             var result = await _reviewService.DeleteReview(id);

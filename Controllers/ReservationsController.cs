@@ -35,8 +35,7 @@ namespace GreenDoorV1.Controllers
 
         //TODO: GetUserBookings.
         [HttpGet("MyReservations")]
-        [Authorize]
-        [AllowAnonymous]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult> GetUserReservations()
         {
             var userId = User.FindFirst("id")?.Value;

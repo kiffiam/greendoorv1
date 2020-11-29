@@ -22,8 +22,9 @@ namespace GreenDoorV1.Services
         public async Task<ActionResult<FeedPost>> AddFeedPost(FeedPost feedPost)
         {
             feedPost.PostingDate = DateTime.Now;
-            await Context.FeedPosts.AddAsync(feedPost);
+            var result = await Context.FeedPosts.AddAsync(feedPost);
             await Context.SaveChangesAsync();
+
             return feedPost;
         }
 
@@ -41,7 +42,7 @@ namespace GreenDoorV1.Services
 
         public async Task<IEnumerable<FeedPost>> GetAllFeedPost()
         {
-            var result = await Context.FeedPosts.ToListAsync();
+            var result = await Context.FeedPosts.OrderByDescending(x=>x.PostingDate).ToListAsync();
             return result;
         }
 

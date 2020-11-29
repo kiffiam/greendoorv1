@@ -15,7 +15,7 @@ namespace GreenDoorV1.Services.Interfaces
         Task<IEnumerable<Review>> GetRoomReviews(long? roomId);
 
         //user--
-        Task<ActionResult<Review>> AddReview(Review review);
+        Task<Review> AddReview(Review review, string userId, long roomId);
 
         //admin
         //Probably not neceserry, because who deletes reviews

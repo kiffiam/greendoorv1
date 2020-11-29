@@ -9,11 +9,13 @@ using GreenDoorV1;
 using GreenDoorV1.Entities;
 using GreenDoorV1.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace GreenDoorV1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FeedPostsController : ControllerBase
     {
         private readonly IFeedPostService _feedPostService;
@@ -55,10 +57,10 @@ namespace GreenDoorV1.Controllers
         public async Task<ActionResult<FeedPost>> PostFeedPost([FromBody] FeedPost feedPost)
         {
             var result = await _feedPostService.AddFeedPost(feedPost);
-            /*if (result == null)
+            if (result == null)
             {
                 return BadRequest();
-            }*/
+            }
             return Ok(result);
         }
 
