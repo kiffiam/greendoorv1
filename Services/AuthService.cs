@@ -40,16 +40,6 @@ namespace GreenDoorV1.Services
 
         public async Task<object> Register(ApplicationUser user, string password)
         {
-            /*var user = new ApplicationUser
-            {
-                UserName = registerViewModel.UserName,
-                Email = registerViewModel.Email,
-                FirstName = registerViewModel.FirstName,
-                LastName = registerViewModel.LastName,
-                BirthDate = registerViewModel.BirthDate,
-                PhoneNumber = registerViewModel.PhoneNumber
-            };*/
-
             var userWithSameEmail = await _userManager.FindByEmailAsync(user.Email);
             if (userWithSameEmail == null)
             {

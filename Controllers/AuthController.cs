@@ -62,10 +62,10 @@ namespace GreenDoorV1.Controllers
             var user = _mapper.Map<ApplicationUser>(registerViewModel);
 
             var result = await _userService.RegisterAdmin(user, registerViewModel.Password);
-            /*if (result == null)
+            if (result == null)
             {
                 return BadRequest();
-            }*/
+            }
             return Ok(result);
         }
 
@@ -93,31 +93,6 @@ namespace GreenDoorV1.Controllers
         {
             await _userService.Logout();
             return Ok();
-        }
-
-        private async Task<object> GenerateJwtToken(string email, ApplicationUser user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-                
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddHours(3);
-
-            var token = new JwtSecurityToken(
-                _configuration["JWT:ValidIssuer"],
-                _configuration["JWT:ValidAudience"],
-                claims,
-                expires: expires,
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
     }

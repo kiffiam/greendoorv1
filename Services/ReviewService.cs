@@ -35,10 +35,12 @@ namespace GreenDoorV1.Services
         public async Task<bool> DeleteReview(long? reviewId)
         {
             var deletable = await Context.Reviews.FindAsync(reviewId);
+
             if (deletable == null)
             {
                 return false;
             }
+
             Context.Reviews.Remove(deletable);
             await Context.SaveChangesAsync();
             return true;
@@ -63,7 +65,7 @@ namespace GreenDoorV1.Services
                     .Where(r => r.Room.Id.Equals(roomId))
                         .ToListAsync();
 
-            if (roomReviews.Count == 0)
+            if (roomReviews==null)
             {
                 return null;
             }

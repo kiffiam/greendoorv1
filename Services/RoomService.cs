@@ -29,26 +29,26 @@ namespace GreenDoorV1.Services
         {
             room.AvailableReservations = new List<Reservation>();
 
-            await Context.Rooms.AddAsync(room);
-           
+            var result = await Context.Rooms.AddAsync(room);
+            
             await Context.SaveChangesAsync();
 
             return room;
         }
 
-        public async Task<ActionResult<bool>> DeleteRoom(long? roomId)
+        public async Task<bool> DeleteRoom(long? roomId)
         {
 
             var original = await Context.Rooms.SingleAsync(r => r.Id.Equals(roomId));            
-            
-            //TODO: függöségek felszámolása, reservation amik a szobára vonatkoznak
 
             if (original != null)
             {
                 original.IsDeleted = true;
                 await Context.SaveChangesAsync();
                 return true;
-            } else {
+            } 
+            else 
+            {
                 return false;
             }
         }
@@ -71,14 +71,13 @@ namespace GreenDoorV1.Services
         {
             var room = await Context.Rooms.Include(r => r.AvailableReservations).SingleOrDefaultAsync(r => r.Id.Equals(id));
 
-            //lehet nem csak a szabadakat hanem az összeset kellene
             room.AvailableReservations = room.AvailableReservations.Where(r=> !r.IsDeleted && r.ReservationDateTime > DateTime.Now).ToList();
 
             if (room == null)
             {
                 return null;
             }
-            //var result = Mapper.Map<RoomDetailedView>(room);
+
             return room;
         }
 
@@ -88,24 +87,12 @@ namespace GreenDoorV1.Services
             var set = Context.Rooms;
 
             var original = await set.Include(r => r.AvailableReservations).SingleOrDefaultAsync(item => item.Id.Equals(id));
-            //var original = await set.SingleOrDefaultAsync(item => item.Id.Equals(id));
 
             if (original == null)
             {
                 return null;
             }
 
-            //var reservations = original.AvailableReservations;
-
-
-
-            //set.Remove(original);
-
-            //room.AvailableReservations = reservations;
-
-            //await set.AddAsync(room);
-
-            //DTO kell meg mapper geci te lusta szar
             original.Difficulty = room.Difficulty;
             original.Description = room.Description;
             original.IsDeleted = room.IsDeleted;
@@ -115,13 +102,11 @@ namespace GreenDoorV1.Services
             original.RecordTime = room.RecordTime;
             original.Name = room.Name;
 
-
             set.Update(original);
 
             await Context.SaveChangesAsync();
 
             return room;
-
         }
     }
 }

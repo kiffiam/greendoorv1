@@ -14,8 +14,7 @@ namespace GreenDoorV1.Services.Interfaces
         Task<Room> GetRoomDetailedById(long? id);
         Task<ActionResult<Room>> AddRoom(Room room);
         Task<ActionResult<Room>> UpdateRoom(long? id, Room room);
-        //TODO: Deleting -> delete reservations or flag deleted
-        Task<ActionResult<bool>> DeleteRoom(long? roomId);
+        Task<bool> DeleteRoom(long? roomId);
 
         
     }

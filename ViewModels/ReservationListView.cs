@@ -15,7 +15,6 @@ namespace GreenDoorV1.ViewModels
         [Required]
         [DateAfterNow]
         public DateTime? ReservationDateTime { get; set; }
-        public int? NumberOfPlayers { get; set; }
         public string RoomName { get; set; }
         public string UserName { get; set; }
         public string UserPhoneNumber { get; set; }

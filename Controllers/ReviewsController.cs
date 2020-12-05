@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace GreenDoorV1.Controllers
 {
@@ -63,13 +62,6 @@ namespace GreenDoorV1.Controllers
             var result = await _reviewService.AddReview(review, userId, roomId);
             return Ok(_mapper.Map<ReviewViewModel>(result));
         }
-
-        // PUT api/<ReviewsController>/5
-        /*[HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-
-        }*/
 
         // DELETE api/<ReviewsController>/5
         [HttpDelete("{id}")]

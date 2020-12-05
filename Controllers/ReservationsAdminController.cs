@@ -33,7 +33,6 @@ namespace GreenDoorV1.Controllers
         }
 
         //ADMIN
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReservationListView>>> GetAllReservations()
         {

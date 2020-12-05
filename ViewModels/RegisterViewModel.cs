@@ -18,9 +18,6 @@ namespace GreenDoorV1.ViewModels
         public string LastName { get; set; }
 
         [Required]
-        public DateTime BirthDate { get; set; }
-
-        [Required]
         public string PhoneNumber { get; set; }
 
         [Required]

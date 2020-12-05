@@ -37,14 +37,8 @@ namespace GreenDoorV1
 
             services.AddControllers();
 
-            //services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddControllers(options => options.EnableEndpointRouting = false);
 
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
-            //services.AddMvcCore();
-
-            //
             services.AddCors();
 
             services.AddHttpContextAccessor();
@@ -165,16 +159,6 @@ namespace GreenDoorV1
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
-            //app.UseMvc();
-
-            /*app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "/api/{controller}/{action=Index}/{id?}");
-            });*/
 
             app.UseEndpoints(endpoints =>
             {

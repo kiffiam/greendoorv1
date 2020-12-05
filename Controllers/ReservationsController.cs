@@ -33,7 +33,6 @@ namespace GreenDoorV1.Controllers
             _userManager = userManager;
         }
 
-        //TODO: GetUserBookings.
         [HttpGet("MyReservations")]
         [Authorize(Roles = "User")]
         public async Task<ActionResult> GetUserReservations()
@@ -47,56 +46,29 @@ namespace GreenDoorV1.Controllers
             return Ok(_mapper.Map<IEnumerable<ReservationListView>>(result)); ;
         }
 
-        /*[HttpPut("Book/{id}")]
-        //[Authorize(Roles = "User")]
-        //[AllowAnonymous]
-        public async Task<ActionResult> BookReservation([FromRoute] long id, [FromBody] string userId)
-        {
-
-            var result = await _reservationService.BookReservation(userId, id);
-            if (!result)
-            {
-                return BadRequest();
-            }
-            return Ok(result);
-        }*/
-
-        /*[HttpPut("Unbook/{id}")]
-        //[Authorize(Roles = "User")]
-        public async Task<ActionResult> UnbookReservation([FromRoute] long id, [FromBody] string userId)
-        {
-            var result = await _reservationService.UnbookReservation(userId, id);
-            if (!result)
-            {
-                return BadRequest("A foglalás törlése nem sikerült!");
-            }
-            return Ok(result);
-        }*/
-
         [HttpPut("Book/{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<ActionResult> BookReservation([FromRoute] long id)
         {
             var userId = User.FindFirst("id")?.Value;
-            var user = await _userManager.GetUserAsync(HttpContext.User);
 
             var result = await _reservationService.BookReservation(userId, id);
             if (!result)
             {
-                return BadRequest();
+                return BadRequest("The booking has been unsuccessful!");
             }
             return Ok(result);
         }
 
         [HttpPut("Unbook/{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<ActionResult> UnbookReservation([FromRoute] long id)
         {
             var userId = User.FindFirst("id")?.Value;
             var result = await _reservationService.UnbookReservation(userId, id);
             if (!result)
             {
-                return BadRequest("A foglalás törlése nem sikerült!");
+                return BadRequest("The unbooking has been unsuccesful!");
             }
             return Ok(result);
         }

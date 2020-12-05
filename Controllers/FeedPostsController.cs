@@ -35,8 +35,6 @@ namespace GreenDoorV1.Controllers
         }
 
         // PUT: api/FeedPosts/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutFeedPost(long id, FeedPost feedPost)
@@ -50,8 +48,6 @@ namespace GreenDoorV1.Controllers
         }
 
         // POST: api/FeedPosts
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<FeedPost>> PostFeedPost([FromBody] FeedPost feedPost)

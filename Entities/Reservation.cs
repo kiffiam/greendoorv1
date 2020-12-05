@@ -18,7 +18,7 @@ namespace GreenDoorV1.Entities
         [DateAfterNow]
         public DateTime? ReservationDateTime { get; set; }
         public virtual Room Room { get; set; }
-        public int? NumberOfPlayers { get; set; }
+        //public int? NumberOfPlayers { get; set; }
 
         [DefaultValue(false)]
         public bool IsBooked { get; set; }

@@ -53,7 +53,14 @@ namespace GreenDoorV1.Controllers
         public async Task<ActionResult> GetRoomDetailed([FromRoute] long id)
         {
             var room = await _roomService.GetRoomDetailedById(id);
+
+            if (room == null)
+            {
+                return NotFound("Room not found!");
+            }
+
             var result = _mapper.Map<RoomDetailedView>(room);
+
             return Ok(result);
         }
 
@@ -64,10 +71,12 @@ namespace GreenDoorV1.Controllers
         public async Task<IActionResult> PutRoom([FromRoute] long id, [FromBody] Room room)
         {
             var result = await _roomService.UpdateRoom(id, room);
+
             if (result == null)
             {
-                return NotFound();
+                return BadRequest();
             }
+
             return Ok(result);
         }
 
@@ -78,16 +87,20 @@ namespace GreenDoorV1.Controllers
         public async Task<ActionResult> PostRoom([FromBody] Room room)
         {
             var result = await _roomService.AddRoom(room);
-            
+
             return Ok(_mapper.Map<RoomDetailedView>(room));
         }
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteRoom(long id)
+        public async Task<ActionResult> DeleteRoom(long id)
         {
-            var result = _roomService.DeleteRoom(id);
+            var result = await _roomService.DeleteRoom(id);
+            if (!result)
+            {
+                return BadRequest();
+            }
             return Ok(result);
         }
     }

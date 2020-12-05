@@ -34,6 +34,7 @@ namespace GreenDoorV1.ViewModels
         public TimeSpan RecordTime { get; set; }
         
         public virtual ICollection<ReservationListView> AvailableReservations { get; set; }
-        //public List<Picture> Pictures { get; set; }
+
+        //public virtual ICollection<ReviewViewModel> Reviews { get; set; }
     }
 }

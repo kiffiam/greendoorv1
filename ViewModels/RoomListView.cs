@@ -27,6 +27,5 @@ namespace GreenDoorV1.ViewModels
         [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
         public TimeSpan MaxTime { get; set; }
 
-        //public List<Picture> Pictures { get; set; }
     }
 }

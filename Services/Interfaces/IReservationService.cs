@@ -10,7 +10,7 @@ namespace GreenDoorV1.Services.Interfaces
 {
     public interface IReservationService
     {
-        //unlogged--?? kell ez egyáltalán? DetailedRoomView-ba ugyis ott lesz
+        //unlogged--
         Task<IEnumerable<Reservation>> GetAllFreeReservationsByRoomId(long roomId);
 
         //user--
@@ -25,7 +25,6 @@ namespace GreenDoorV1.Services.Interfaces
         Task<IEnumerable<Reservation>> GetAllReservationsByRoomId(long roomId);
         Task<IEnumerable<Reservation>> GetAllBookedReservationsByRoomId(long roomId);
         Task<IEnumerable<Reservation>> AddAvailableRangeReservation(long roomId, int qty, DateTime fromDateTime);
-        Task<Reservation> AddReservation(Reservation reservation);
         Task<Reservation> UpdateReservation(long id, Reservation reservation);
         Task<bool> DeleteReservation(long id);
     }

@@ -10,15 +10,13 @@ namespace GreenDoorV1.Entities
     public class Review
     {
         public long Id { get; set; }
+
+        [Required]
         public virtual ApplicationUser User { get; set; }
 
-        //[ForeignKey("Id")]
-        //public long UserId { get; set; }
+        [Required]
         public virtual Room Room { get; set; }
 
-        //[ForeignKey("Id")]
-        //public long RoomId { get; set; }
-        //public string RoomName { get; set; }
         [Range(0,5)]
         public int Point { get; set; }
 
