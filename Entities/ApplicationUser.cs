@@ -13,6 +13,6 @@ namespace GreenDoorV1.Entities
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
-        //public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

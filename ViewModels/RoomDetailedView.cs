@@ -32,7 +32,11 @@ namespace GreenDoorV1.ViewModels
         [JsonConverter(typeof(TimespanConverter))]
         [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
         public TimeSpan RecordTime { get; set; }
-        
+
+        [JsonConverter(typeof(TimespanConverter))]
+        [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
+        public TimeSpan IntervalTime { get; set; }
+
         public virtual ICollection<ReservationListView> AvailableReservations { get; set; }
 
         //public virtual ICollection<ReviewViewModel> Reviews { get; set; }

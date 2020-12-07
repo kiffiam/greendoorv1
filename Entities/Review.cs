@@ -11,10 +11,8 @@ namespace GreenDoorV1.Entities
     {
         public long Id { get; set; }
 
-        [Required]
         public virtual ApplicationUser User { get; set; }
 
-        [Required]
         public virtual Room Room { get; set; }
 
         [Range(0,5)]
