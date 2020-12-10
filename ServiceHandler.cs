@@ -18,13 +18,10 @@ namespace GreenDoorV1
             services.AddScoped<IFeedPostService, FeedPostService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }
 
-        public static void RegisterSwagger()
-        {
-
-        }
     }
 }
